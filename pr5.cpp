@@ -12,7 +12,7 @@ public:
     DoubleLinkedList() : head(nullptr), tail(nullptr) {}
     Node* head;
     Node* tail;
-    void push_front(int data)
+    void Push_front(int data)
     {
         Node* newNode = new Node(data);
         if (head != nullptr)
@@ -27,7 +27,7 @@ public:
             tail = newNode;
         }
     }
-    void push_back(int data)
+    void Push_back(int data)
     {
         Node* newNode = new Node(data);
         if (tail != nullptr)
@@ -42,7 +42,7 @@ public:
             tail = newNode;
         }
     }
-    void pop_front()
+    void Pop_front()
     {
         if (head != nullptr)
         {
@@ -56,7 +56,7 @@ public:
             head->prev = nullptr;
         }
     }
-    void pop_back()
+    void Pop_back()
     {
         if (tail != nullptr)
         {
@@ -70,7 +70,7 @@ public:
             tail->next = nullptr;
         }
     }
-    void display()
+    void Display()
     {
         if (head != nullptr)
         {
@@ -83,44 +83,134 @@ public:
             } while (currentNode != head->prev);
         }
     }
-    void sort()
+    void Sort()
     {
         if (head != nullptr)
         {
-            Node* tempNode;
+            Node* tempNode = new Node(0);
             Node* currentNode = head;
-            do
+            Node* currentNode2 = head->next;
+            while (currentNode->next != nullptr)
             {
-                Node* currentNode2 = currentNode->next;
-                do 
+                while (currentNode2 != nullptr)
                 {
-                    if (currentNode->data < currentNode2->data)
+                    if (currentNode->data > currentNode2->data)
                     {
-                        tempNode = currentNode;
-                        currentNode = currentNode2;
-                        currentNode2 = tempNode;
+                        tempNode->data = currentNode->data;
+                        currentNode->data = currentNode2->data;
+                        currentNode2->data = tempNode->data;
                     }
-
                     currentNode2 = currentNode2->next;
-
-                } while (currentNode2 != head->prev);
-
+                }
                 currentNode = currentNode->next;
-            } while (currentNode != head->prev);
+                currentNode2 = currentNode->next;
+            }
+            delete tempNode;
         }
-
+    }
+    void DeleteDuplicates()
+    {
+        if (head != nullptr)
+        {
+            Node* currentNode = head;
+            while (currentNode != nullptr)
+            {
+                Node* nextNode = currentNode->next;
+                while (nextNode != nullptr)
+                {
+                    if (currentNode->data == nextNode->data)
+                    {
+                        Node* foundDuplicate = nextNode;
+                        nextNode = nextNode->next;
+                        if (foundDuplicate->prev != nullptr)
+                        {
+                            foundDuplicate->prev->next = foundDuplicate->next;
+                        }
+                        if (foundDuplicate->next != nullptr)
+                        {
+                            foundDuplicate->next->prev = foundDuplicate->prev;
+                        }
+                        if (foundDuplicate == head)
+                        {
+                            head = foundDuplicate->next;
+                        }
+                        if (foundDuplicate == tail)
+                        {
+                            tail = foundDuplicate->prev;
+                        }
+                        delete foundDuplicate;
+                    }
+                    else
+                    {
+                        nextNode = nextNode->next;
+                    }
+                }
+                currentNode = currentNode->next;
+            }
+        }
     }
 };
+
 int main()
 {
     DoubleLinkedList list;
-    list.push_front(2);
-    list.push_front(3);
-    list.push_front(6);
-    list.push_back(1);
-    list.display();
-    list.sort();
-    std::cout << "head - " << list.head->data << "\n";
-    std::cout << "tail - " << list.tail->data << "\n";
-    list.display();
+    short selection;
+    do
+    {
+        std::cout << "\n-----------------------------------\n";
+        std::cout << "1 - add front element\n2 - add back element\n3 - remove front element\n4 - remove back element\n5 - show list\n6 - sort list\n7 - delete duplcates\n9 - leave\nselect: ";
+        std::cin >> selection;
+        std::cout << "\n-----------------------------------\n";
+        switch (selection)
+        {
+            case 1:
+            {
+                int elem;
+                std::cout << "enter element: ";
+                std::cin >> elem;
+                list.Push_front(elem);
+                std::cout << "\nelement added";
+                break;
+            }
+            case 2:
+            {
+                int elem;
+                std::cout << "enter element: ";
+                std::cin >> elem;
+                list.Push_back(elem);
+                std::cout << "\nelement added";
+                break;
+            }
+            case 3:
+            {
+                list.Pop_front();
+                std::cout << "\nremoved front element";
+                break;
+            }
+            case 4:
+            {
+                list.Pop_back();
+                std::cout << "\nremoved back element";
+                break;
+            }
+            case 5:
+            {
+                list.Display();
+                break;
+            }
+            case 6:
+            {
+                list.Sort();
+                std::cout << "\nsorted";
+                break;
+            }
+            case 7:
+            {
+                list.DeleteDuplicates();
+                std::cout << "\ndeleted duplicates";
+                break;
+            }
+        }
+    } while (selection != 8);
+
 }
